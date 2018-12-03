@@ -1,3 +1,4 @@
+using Eggplant.Domain.Common;
 using Eggplant.Domain.Documents;
 using Eggplant.Domain.Recipes;
 using Eggplant.Domain.RecipeTags;
@@ -27,6 +28,16 @@ namespace Eggplant.Persistence
             modelBuilder.ApplyConfiguration(new TagConfiguration());
             modelBuilder.ApplyConfiguration(new RecipeConfiguration());
             modelBuilder.ApplyConfiguration(new RecipeTagConfiguration());
+        }
+
+        public void Save()
+        {
+            this.SaveChanges();
+        }
+
+        public new DbSet<T> Set<T>() where T : class, IEntity
+        {
+            return base.Set<T>();
         }
 
         public virtual DbSet<Recipe> Recipes { get; set; }
