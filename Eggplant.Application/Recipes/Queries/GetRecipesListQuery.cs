@@ -14,7 +14,7 @@ namespace Eggplant.Application.Recipes.Queries
             _repository = repository;
         }
 
-        public List<RecipeModel> Execute()
+        public IQueryable<RecipeModel> Execute()
         {
             var recipes = _repository.GetAll()
                 .Select(e => new RecipeModel
@@ -23,7 +23,7 @@ namespace Eggplant.Application.Recipes.Queries
                     Name = e.Name                    
                 });
 
-            return recipes.ToList();
+            return recipes;
         }
     }
 }
