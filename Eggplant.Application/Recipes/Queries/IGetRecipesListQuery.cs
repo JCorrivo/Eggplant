@@ -1,9 +1,10 @@
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Eggplant.Application.Recipes.Queries
 {
     public interface IGetRecipesListQuery
     {
-         List<RecipeModel> Execute();
+         IQueryable<RecipeModel> Execute();
     }
 }
