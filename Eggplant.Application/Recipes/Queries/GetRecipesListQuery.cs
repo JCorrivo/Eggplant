@@ -1,14 +1,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using Eggplant.Application.Interfaces.Persistence;
+using Eggplant.Domain.Recipes;
 
 namespace Eggplant.Application.Recipes.Queries
 {
     public class GetRecipesListQuery : IGetRecipesListQuery
     {
-        private readonly IRecipeRepository _repository;
+        private readonly IReadOnlyRepository<Recipe> _repository;
 
-        public GetRecipesListQuery(IRecipeRepository repository)
+        public GetRecipesListQuery(IReadOnlyRepository<Recipe> repository)
         {
             _repository = repository;
         }

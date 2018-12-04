@@ -25,11 +25,6 @@ namespace Eggplant.Persistence
                 .Single(p => p.Id == id);
         }
 
-        public IQueryable<T> GetAll()
-        {
-            return _dbContext.Set<T>();
-        }
-
         public void Remove(T entity)
         {
             _dbContext.Set<T>()
