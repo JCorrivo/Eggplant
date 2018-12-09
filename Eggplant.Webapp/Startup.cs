@@ -2,13 +2,18 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Eggplant.Application.Recipes.Queries;
+using Eggplant.Domain.Common;
+using Eggplant.Persistence;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Scrutor;
 
 namespace Eggplant.Webapp
 {
@@ -31,8 +36,50 @@ namespace Eggplant.Webapp
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
-
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+
+            services.AddDbContext<EggplantContext>(options =>
+                options.UseSqlServer(Configuration.GetConnectionString("EggplantContext")
+                /*, b => b.MigrationsAssembly("Eggplant.Persistence") */));
+
+            services.Scan(scan => scan
+                .FromAssemblyOf<IEntity>()
+                .AddClasses(classes => classes.InNamespaces("Eggplant.Domain"))
+                .AsImplementedInterfaces()
+                .WithTransientLifetime());
+       
+            services.Scan(scan => scan
+                .FromAssemblyOf<IEntity>()
+                .AddClasses(classes => classes.InNamespaces("Eggplant.Domain"))
+                .UsingRegistrationStrategy(RegistrationStrategy.Skip)
+                .AsSelf()
+                .WithTransientLifetime());
+
+            services.Scan(scan => scan
+                .FromAssemblyOf<IGetRecipesListQuery>()
+                .AddClasses(classes => classes.InNamespaces("Eggplant.Application"))
+                .AsImplementedInterfaces()
+                .WithTransientLifetime());
+       
+            services.Scan(scan => scan
+                .FromAssemblyOf<IGetRecipesListQuery>()
+                .AddClasses(classes => classes.InNamespaces("Eggplant.Application"))
+                .UsingRegistrationStrategy(RegistrationStrategy.Skip)
+                .AsSelf()
+                .WithTransientLifetime());
+
+            services.Scan(scan => scan
+                .FromAssemblyOf<IEggplantContext>()
+                .AddClasses(classes => classes.InNamespaces("Eggplant.Persistence"))
+                .AsImplementedInterfaces()
+                .WithTransientLifetime());
+       
+            services.Scan(scan => scan
+                .FromAssemblyOf<IEggplantContext>()
+                .AddClasses(classes => classes.InNamespaces("Eggplant.Persistence"))
+                .UsingRegistrationStrategy(RegistrationStrategy.Skip)
+                .AsSelf()
+                .WithTransientLifetime());
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
